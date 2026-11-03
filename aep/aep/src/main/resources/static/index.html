@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7f4">
+  <title>Valida+ | Controle de validade</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="Valida+ início">
+      <span class="brand-mark">V+</span>
+      <span><strong>Valida<span>+</span></strong><small>GESTÃO INTELIGENTE</small></span>
+    </a>
+
+    <div class="side-label">MENU PRINCIPAL</div>
+
+    <nav class="side-nav" aria-label="Navegação principal">
+      <button class="nav-link active" data-tab="lotes">
+        <span class="nav-icon">▦</span>
+        Visão geral
+        <span class="nav-count" id="nav-lotes-count">0</span>
+      </button>
+
+      <button class="nav-link" data-tab="estabelecimentos">
+        <span class="nav-icon">⌂</span>
+        Estabelecimentos
+      </button>
+
+      <button class="nav-link" data-tab="usuarios">
+        <span class="nav-icon">♙</span>
+        Usuários
+      </button>
+
+      <button class="nav-link" data-tab="movimentacoes">
+        <span class="nav-icon">↗</span>
+        Doações e descartes
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="help-card">
+        <span class="help-icon">✦</span>
+        <strong>Organização em dia</strong>
+        <p>Acompanhe os prazos e reduza o desperdício de alimentos.</p>
+      </div>
+
+      <div class="user-mini">
+        <div class="avatar-placeholder">A</div>
+        <div>
+          <strong>Área administrativa</strong>
+          <small>Sistema Valida+</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu">☰</button>
+        <div>
+          <span class="eyebrow">PAINEL DE CONTROLE</span>
+          <h1 id="page-title">Visão geral</h1>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span class="today-label" id="today-label"></span>
+        <span class="status-dot"></span>
+        <span class="online-label">Sistema conectado</span>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- VISÃO GERAL / LOTES -->
+      <section class="tab-panel active" id="tab-lotes">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">ACOMPANHAMENTO DE ESTOQUE</p>
+            <h2>Controle de validade</h2>
+            <p class="muted">Gerencie seus produtos e acompanhe os prazos de vencimento.</p>
+          </div>
+          <button class="btn btn-primary" id="focus-lote">＋ Novo lote</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top"><span>Total de lotes</span><span class="stat-icon green">▦</span></div>
+            <strong id="stat-total">—</strong>
+            <small>Produtos cadastrados</small>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top"><span>Dentro do prazo</span><span class="stat-icon blue">✓</span></div>
+            <strong id="stat-ok">—</strong>
+            <small>Estoque regular</small>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top"><span>Próximos do vencimento</span><span class="stat-icon amber">◷</span></div>
+            <strong id="stat-proximo">—</strong>
+            <small>Vencem em até 3 dias</small>
+          </article>
+
+          <article class="stat-card">
+            <div class="stat-top"><span>Produtos vencidos</span><span class="stat-icon red">!</span></div>
+            <strong id="stat-vencido">—</strong>
+            <small>Precisam de atenção</small>
+          </article>
+        </div>
+
+        <section class="panel form-panel" id="lote-editor">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">ESTOQUE</span>
+              <h3 id="titulo-lote">Cadastrar novo lote</h3>
+              <p class="muted">Preencha as informações do produto abaixo.</p>
+            </div>
+            <span class="heading-icon">＋</span>
+          </div>
+
+          <form id="form-lote" class="form-grid">
+            <input type="hidden" id="lote-id">
+
+            <label class="form-control">
+              <span class="label-text">Estabelecimento *</span>
+              <select class="select select-bordered" id="lote-estabelecimento" required>
+                <option value="">Carregando...</option>
+              </select>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Operador</span>
+              <select class="select select-bordered" id="lote-operador">
+                <option value="">Nenhum</option>
+              </select>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Nome do produto *</span>
+              <input class="input input-bordered" id="lote-produto" required maxlength="200" placeholder="Ex.: Leite integral">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Categoria</span>
+              <input class="input input-bordered" id="lote-categoria" maxlength="200" placeholder="Ex.: Laticínios">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Quantidade *</span>
+              <input class="input input-bordered" id="lote-quantidade" type="number" min="1" required placeholder="0">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Unidade de medida</span>
+              <input class="input input-bordered" id="lote-unidade" maxlength="20" placeholder="kg, un, L...">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Preço unitário (R$) *</span>
+              <input class="input input-bordered" id="lote-preco" type="number" step="0.01" min="0" required placeholder="0,00">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Data de validade *</span>
+              <input class="input input-bordered" id="lote-validade" type="date" required>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" id="btn-salvar-lote" type="submit">Salvar lote</button>
+              <button class="btn btn-ghost" id="btn-cancelar-lote" type="button" hidden>Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading table-heading">
+            <div>
+              <span class="section-kicker">INVENTÁRIO</span>
+              <h3>Lotes cadastrados</h3>
+              <p class="muted">Consulte, edite ou remova os registros do estoque.</p>
+            </div>
+
+            <label class="filter-control">
+              <span>Filtrar situação</span>
+              <select class="select select-bordered select-sm" id="filtro">
+                <option value="TODOS">Todas as situações</option>
+                <option value="PROXIMO">Próximos do vencimento</option>
+                <option value="VENCIDO">Vencidos</option>
+                <option value="OK">Dentro do prazo</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table data-table">
+              <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço</th>
+                <th>Validade</th>
+                <th>Situação</th>
+                <th>Estabelecimento</th>
+                <th>Operador</th>
+                <th>Ações</th>
+              </tr>
+              </thead>
+              <tbody id="tabela-lotes">
+              <tr><td colspan="8" class="empty-cell">Carregando lotes...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- ESTABELECIMENTOS -->
+      <section class="tab-panel" id="tab-estabelecimentos">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">CADASTROS</p>
+            <h2>Estabelecimentos</h2>
+            <p class="muted">Gerencie os locais vinculados ao controle de estoque.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">NOVO CADASTRO</span>
+              <h3>Cadastrar estabelecimento</h3>
+              <p class="muted">Informe o administrador responsável e os dados do local.</p>
+            </div>
+            <span class="heading-icon">⌂</span>
+          </div>
+
+          <form id="form-estabelecimento" class="form-grid compact-grid">
+            <label class="form-control">
+              <span class="label-text">Administrador *</span>
+              <select class="select select-bordered" id="est-administrador" required>
+                <option value="">Carregando...</option>
+              </select>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Nome *</span>
+              <input class="input input-bordered" id="est-nome" required maxlength="200" placeholder="Nome do estabelecimento">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Código</span>
+              <input class="input input-bordered" id="est-codigo" maxlength="200" placeholder="Código de identificação">
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Cadastrar estabelecimento</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">CADASTROS ATIVOS</span>
+              <h3>Estabelecimentos cadastrados</h3>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table data-table">
+              <thead>
+              <tr><th>ID</th><th>Nome</th><th>Código</th><th>Administrador</th></tr>
+              </thead>
+              <tbody id="tabela-estabelecimentos">
+              <tr><td colspan="4" class="empty-cell">Carregando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- USUÁRIOS -->
+      <section class="tab-panel" id="tab-usuarios">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">ACESSOS DO SISTEMA</p>
+            <h2>Usuários</h2>
+            <p class="muted">Cadastre administradores e operadores do sistema.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">NOVO ACESSO</span>
+              <h3>Cadastrar usuário</h3>
+              <p class="muted">Defina os dados e o nível de acesso do usuário.</p>
+            </div>
+            <span class="heading-icon">♙</span>
+          </div>
+
+          <form id="form-usuario" class="form-grid compact-grid">
+            <label class="form-control">
+              <span class="label-text">Nome completo *</span>
+              <input class="input input-bordered" id="usu-nome" required maxlength="200" placeholder="Nome do usuário">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">E-mail *</span>
+              <input class="input input-bordered" id="usu-email" type="email" required maxlength="200" placeholder="email@exemplo.com">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Nível de acesso *</span>
+              <select class="select select-bordered" id="usu-nivel">
+                <option value="ADMINISTRADOR">Administrador</option>
+                <option value="OPERADOR">Operador</option>
+              </select>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Cadastrar usuário</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">EQUIPE</span>
+              <h3>Usuários cadastrados</h3>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table data-table">
+              <thead>
+              <tr><th>ID</th><th>Nome</th><th>E-mail</th><th>Nível de acesso</th></tr>
+              </thead>
+              <tbody id="tabela-usuarios">
+              <tr><td colspan="4" class="empty-cell">Carregando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- DOAÇÕES E DESCARTES -->
+      <section class="tab-panel" id="tab-movimentacoes">
+
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">DESTINAÇÃO DE ALIMENTOS</p>
+            <h2>Doações e descartes</h2>
+            <p class="muted">Registre o destino dos produtos e acompanhe as movimentações do estoque.</p>
+          </div>
+        </div>
+
+        <!-- FORMULÁRIO DE DOAÇÃO -->
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">DESTINAÇÃO SOLIDÁRIA</span>
+              <h3>Registrar doação</h3>
+              <p class="muted">Informe o lote, a quantidade e a entidade que receberá os alimentos.</p>
+            </div>
+            <span class="heading-icon">♡</span>
+          </div>
+
+          <form id="form-doacao" class="form-grid">
+
+            <label class="form-control">
+              <span class="label-text">Lote / Produto *</span>
+              <select class="select select-bordered" id="doacao-lote" required>
+                <option value="">Selecione um lote</option>
+              </select>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Quantidade *</span>
+              <input class="input input-bordered" id="doacao-quantidade" type="number" min="1" required placeholder="Quantidade a doar">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Data da doação *</span>
+              <input class="input input-bordered" id="doacao-data" type="date" required>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Entidade beneficiada *</span>
+              <input class="input input-bordered" id="doacao-entidade" maxlength="200" required placeholder="Ex.: ONG parceira">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Usuário responsável (operador) *</span>
+              <select class="select select-bordered" id="doacao-usuario" required>
+                <option value="">Selecione o responsável</option>
+              </select>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Registrar doação</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- FORMULÁRIO DE DESCARTE -->
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">CONTROLE DE PERDAS</span>
+              <h3>Registrar descarte</h3>
+              <p class="muted">Registre os alimentos descartados e informe o motivo.</p>
+            </div>
+            <span class="heading-icon">!</span>
+          </div>
+
+          <form id="form-descarte" class="form-grid">
+
+            <label class="form-control">
+              <span class="label-text">Lote / Produto *</span>
+              <select class="select select-bordered" id="descarte-lote" required>
+                <option value="">Selecione um lote</option>
+              </select>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Quantidade *</span>
+              <input class="input input-bordered" id="descarte-quantidade" type="number" min="1" required placeholder="Quantidade descartada">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Data do descarte *</span>
+              <input class="input input-bordered" id="descarte-data" type="date" required>
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Justificativa *</span>
+              <input class="input input-bordered" id="descarte-justificativa" maxlength="200" required placeholder="Ex.: Produto vencido">
+            </label>
+
+            <label class="form-control">
+              <span class="label-text">Usuário responsável (operador) *</span>
+              <select class="select select-bordered" id="descarte-usuario" required>
+                <option value="">Selecione o responsável</option>
+              </select>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Registrar descarte</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- HISTÓRICO DE DOAÇÕES -->
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">HISTÓRICO</span>
+              <h3>Doações registradas</h3>
+              <p class="muted">Acompanhe os produtos destinados às entidades beneficiadas.</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table data-table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Data</th>
+                <th>Entidade beneficiada</th>
+                <th>Impacto (R$)</th>
+              </tr>
+              </thead>
+              <tbody id="tabela-doacoes">
+              <tr><td colspan="6" class="empty-cell">Carregando doações...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- HISTÓRICO DE DESCARTES -->
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">HISTÓRICO</span>
+              <h3>Descartes registrados</h3>
+              <p class="muted">Acompanhe os alimentos descartados e suas justificativas.</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table data-table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Data</th>
+                <th>Justificativa</th>
+                <th>Impacto (R$)</th>
+              </tr>
+              </thead>
+              <tbody id="tabela-descartes">
+              <tr><td colspan="6" class="empty-cell">Carregando descartes...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </section>
+    </div>
+
+    <footer class="footer">
+      Valida+ <span>•</span> Controle de validade de alimentos
+    </footer>
+  </main>
+</div>
+
+<div id="aviso" class="toast-message" role="status" aria-live="polite"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

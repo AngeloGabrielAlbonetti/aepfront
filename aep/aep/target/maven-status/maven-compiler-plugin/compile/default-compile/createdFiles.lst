@@ -1,0 +1,13 @@
+com\example\aep\Destinacao.class
+com\example\aep\ControleMovimentacao.class
+com\example\aep\ContrleLote.class
+com\example\aep\Usuario.class
+com\example\aep\AepApplication.class
+com\example\aep\ControleUser.class
+com\example\aep\Estabelecimento.class
+com\example\aep\Lote.class
+com\example\aep\ControleEstabelecimento.class
+com\example\aep\Doacao.class
+com\example\aep\Administrador.class
+com\example\aep\Descarte.class
+com\example\aep\Operador.class
